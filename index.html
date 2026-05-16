@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="이음 민권센터 — 조지아 애틀랜타 한인 및 아시아계 미국인의 사회·인종·경제적 정의를 위해 함께 합니다." />
+  <meta property="og:title" content="미션 & 비전 | 이음 민권센터" />
+  <meta property="og:type" content="website" />
+  <title>미션 & 비전 | 이음 민권센터</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #1a2e4a;
+      --blue:   #2c5f8a;
+      --sky:    #4a90c4;
+      --gold:   #c8973a;
+      --cream:  #fdf8f2;
+      --white:  #ffffff;
+      --gray:   #f4f4f4;
+      --text:   #2d2d2d;
+      --muted:  #666;
+      --radius: 10px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.75;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links > li { position: relative; }
+    .nav-links > li > a {
+      display: block;
+      padding: 0.5rem 0.85rem;
+      color: rgba(255,255,255,0.87);
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-links > li > a:hover { background: rgba(255,255,255,0.12); color: var(--white); }
+    .nav-links .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      min-width: 200px;
+      padding: 0.5rem 0;
+      list-style: none;
+    }
+    .nav-links > li:hover .dropdown-menu { display: block; }
+    .dropdown-menu li a {
+      display: block;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.84rem;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .dropdown-menu li a:hover { background: var(--gray); }
+    .nav-donate {
+      background: var(--gold);
+      color: var(--white) !important;
+      border-radius: 6px;
+      padding: 0.45rem 1rem !important;
+      font-weight: 700 !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-donate:hover { opacity: 0.85; background: transparent !important; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, var(--sky) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 6rem 2rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(200,151,58,0.25);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      margin-bottom: 1.4rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 680px;
+      margin: 0 auto 2rem;
+      color: rgba(255,255,255,0.85);
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-gold { background: var(--gold); color: var(--white); }
+    .btn-outline { background: transparent; border: 2px solid var(--white); color: var(--white); }
+
+    /* ── SECTION WRAPPER ── */
+    .section { padding: 5rem 2rem; }
+    .section-alt { background: var(--cream); }
+    .section-dark { background: var(--navy); color: var(--white); }
+    .container { max-width: 1080px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 0.6rem;
+    }
+    .section-dark .section-label { color: var(--gold); }
+    .section-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 700px;
+      margin-bottom: 3rem;
+    }
+    .section-dark .section-sub { color: rgba(255,255,255,0.7); }
+
+    /* ── MISSION & VISION ── */
+    .mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 700px) { .mv-grid { grid-template-columns: 1fr; } }
+    .mv-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2.2rem;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--sky);
+    }
+    .mv-card.vision { border-top-color: var(--gold); }
+    .mv-card h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 0.8rem;
+    }
+    .mv-card p { color: var(--muted); font-size: 0.97rem; }
+
+    /* ── VALUES ── */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .value-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .value-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.12); }
+    .value-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+    .value-ko { font-size: 1.05rem; font-weight: 800; color: var(--gold); margin-bottom: 0.3rem; }
+    .value-en { font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 0.8rem; }
+    .value-desc { font-size: 0.88rem; color: rgba(255,255,255,0.8); line-height: 1.65; }
+
+    /* ── PROJECTS ── */
+    .project-tabs {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.55rem 1.3rem;
+      border: 2px solid var(--sky);
+      border-radius: 30px;
+      background: transparent;
+      color: var(--sky);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+    .tab-btn.active, .tab-btn:hover { background: var(--sky); color: var(--white); }
+    .project-panel { display: none; }
+    .project-panel.active { display: block; }
+    .project-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .project-header {
+      background: linear-gradient(90deg, var(--navy), var(--blue));
+      color: var(--white);
+      padding: 1.8rem 2rem;
+    }
+    .project-number {
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .project-header h3 { font-size: 1.4rem; font-weight: 800; }
+    .project-body { padding: 2rem; }
+    .roadmap {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .roadmap::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--sky), var(--gold));
+    }
+    .roadmap-step {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      padding: 0.9rem 0;
+    }
+    .step-dot {
+      flex-shrink: 0;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--white);
+      background: var(--sky);
+      box-shadow: 0 0 0 4px rgba(74,144,196,0.18);
+      z-index: 1;
+    }
+    .roadmap-step:nth-child(2) .step-dot { background: var(--blue); }
+    .roadmap-step:nth-child(3) .step-dot { background: var(--gold); }
+    .step-content { padding-top: 0.5rem; }
+    .step-period {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .step-name { font-size: 1rem; font-weight: 800; color: var(--navy); margin: 0.15rem 0; }
+    .step-desc { font-size: 0.88rem; color: var(--muted); }
+    .effect-box {
+      background: linear-gradient(135deg, #eef6fd, #fdf8f2);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1rem 1.4rem;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .effect-box strong { color: var(--navy); }
+    .service-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .service-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--gray);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+    }
+    .service-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .service-item h4 { font-size: 0.95rem; font-weight: 800; color: var(--navy); margin-bottom: 0.2rem; }
+    .service-item p { font-size: 0.86rem; color: var(--muted); }
+    .program-items { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .program-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border-left: 3px solid var(--sky);
+      padding-left: 1rem;
+    }
+    .program-item h4 { font-size: 0.95rem; font-weight: 800; color: var(--navy); margin-bottom: 0.2rem; }
+    .program-item p { font-size: 0.86rem; color: var(--muted); }
+
+    /* ── PARTNERSHIP TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    thead { background: var(--navy); color: var(--white); }
+    thead th { padding: 1rem 1.2rem; text-align: left; font-size: 0.82rem; letter-spacing: 0.5px; }
+    tbody tr { border-bottom: 1px solid #e8e8e8; transition: background 0.15s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--cream); }
+    tbody td { padding: 0.95rem 1.2rem; vertical-align: top; }
+    tbody td:first-child { font-weight: 700; color: var(--navy); }
+    .tag {
+      display: inline-block;
+      background: rgba(44,95,138,0.1);
+      color: var(--blue);
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    /* ── GET INVOLVED ── */
+    .involve-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.5rem;
+    }
+    .involve-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .involve-card:hover { transform: translateY(-4px); }
+    .involve-icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
+    .involve-card h3 { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 0.5rem; }
+    .involve-card p { font-size: 0.86rem; color: var(--muted); margin-bottom: 1.2rem; }
+    .involve-card .btn {
+      font-size: 0.84rem;
+      padding: 0.55rem 1.4rem;
+      background: var(--sky);
+      color: var(--white);
+      border-radius: 6px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0d1c2d;
+      color: rgba(255,255,255,0.7);
+      padding: 3rem 2rem 1.5rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2rem;
+      max-width: 1080px;
+      margin: 0 auto 2.5rem;
+    }
+    @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+    .footer-brand h2 { font-size: 1.3rem; font-weight: 800; color: var(--white); margin-bottom: 0.6rem; }
+    .footer-brand h2 span { color: var(--gold); }
+    .footer-brand p { font-size: 0.84rem; line-height: 1.7; }
+    .footer-col h4 { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--white); margin-bottom: 1rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col ul li a { font-size: 0.84rem; color: rgba(255,255,255,0.65); transition: color 0.2s; }
+    .footer-col ul li a:hover { color: var(--gold); }
+    .footer-social { display: flex; gap: 0.75rem; margin-top: 1rem; }
+    .social-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+    .social-btn:hover { background: var(--gold); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 1.2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 56px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 4px;
+      margin: 0.6rem 0 1.8rem;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--gold);
+      color: var(--white);
+      padding: 1.5rem 2rem;
+    }
+    .stats-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      text-align: center;
+    }
+    .stat-item span { display: block; }
+    .stat-num { font-size: 2rem; font-weight: 900; }
+    .stat-label { font-size: 0.8rem; opacity: 0.85; font-weight: 600; }
+
+    /* ── RESPONSIVE NAV ── */
+    .hamburger { display: none; background: none; border: none; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); margin: 5px 0; border-radius: 2px; }
+    @media (max-width: 860px) {
+      .hamburger { display: block; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0; right: 0;
+        background: var(--navy);
+        flex-direction: column;
+        padding: 1rem 2rem 2rem;
+        gap: 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links > li { width: 100%; }
+      .nav-links > li > a { padding: 0.75rem 0; border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .nav-links .dropdown-menu { display: block; position: static; box-shadow: none; background: rgba(255,255,255,0.05); border-radius: 0; padding: 0; }
+      .dropdown-menu li a { color: rgba(255,255,255,0.7); padding: 0.6rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <a class="nav-logo" href="#"><span>이음</span> 민권센터</a>
+  <button class="hamburger" id="ham" aria-label="메뉴 열기">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li>
+      <a href="#">소개 ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#mission">미션 & 비전</a></li>
+        <li><a href="#values">핵심 가치</a></li>
+        <li><a href="#">센터 소개</a></li>
+        <li><a href="#">연락처</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">프로그램 ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#projects">데이터 기반 권익 옹호</a></li>
+        <li><a href="#projects">법률·사회보장 서비스</a></li>
+        <li><a href="#projects">리더십 교육 & 아카이브</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">파트너십 ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#partnership">파트너 전략</a></li>
+        <li><a href="#">협력 단체</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">함께하기 ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#involve">자원봉사</a></li>
+        <li><a href="#involve">채용</a></li>
+        <li><a href="#involve">뉴스레터 구독</a></li>
+      </ul>
+    </li>
+    <li><a href="#" class="nav-donate">후원하기</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-tag">Atlanta, Georgia · 조지아주 애틀랜타</div>
+  <h1>함께 <em>이음</em>으로<br>더 정의로운 세상을</h1>
+  <p>이음 민권센터는 조지아 애틀랜타의 한인 및 아시아계 이민자 공동체가 사회적·인종적·경제적 정의를 실현할 수 있도록 조직하고 연결합니다.</p>
+  <div class="hero-btns">
+    <a href="#projects" class="btn btn-gold">핵심 프로젝트 보기</a>
+    <a href="#involve" class="btn btn-outline">함께 참여하기</a>
+  </div>
+</header>
+
+<!-- ── STATS ── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><span class="stat-num">2026</span><span class="stat-label">설립 예정 연도</span></div>
+    <div class="stat-item"><span class="stat-num">3</span><span class="stat-label">핵심 프로젝트</span></div>
+    <div class="stat-item"><span class="stat-num">5+</span><span class="stat-label">파트너 그룹</span></div>
+    <div class="stat-item"><span class="stat-num">GA</span><span class="stat-label">애틀랜타 메트로 지역</span></div>
+  </div>
+</div>
+
+<!-- ── MISSION & VISION ── -->
+<section class="section" id="mission">
+  <div class="container">
+    <p class="section-label">Our Mission & Vision</p>
+    <h2 class="section-title">미션 & 비전</h2>
+    <div class="divider"></div>
+    <div class="mv-grid">
+      <div class="mv-card">
+        <h3>🎯 우리의 미션</h3>
+        <p>이음 민권센터는 조지아 애틀랜타의 한인 및 아시아계 미국인을 조직하여 사회적·인종적·경제적 정의를 실현합니다. 우리는 데이터 기반 권익 옹호, 법률 및 사회보장 서비스 연결, 그리고 공동체 역사 보존을 통해 이민자 공동체의 권리를 지킵니다.</p>
+      </div>
+      <div class="mv-card vision">
+        <h3>🌏 우리의 비전</h3>
+        <p>저소득 이민자, 유색인종, 문서 미비자, 청소년 등 소외된 공동체가 함께 변화의 주체가 되어 더 공정하고 평등한 사회를 만드는 세상을 꿈꿉니다. 우리의 해방은 모든 소외된 공동체의 해방과 연결되어 있음을 믿습니다.</p>
+      </div>
+    </div>
+    <blockquote style="border-left:4px solid var(--sky);padding:1.2rem 1.5rem;background:var(--gray);border-radius:0 var(--radius) var(--radius) 0;font-size:1.05rem;color:var(--navy);font-weight:600;font-style:italic;">
+      "이음(以音)은 소리로 잇는다는 뜻입니다. 우리는 침묵 속에 있던 목소리들을 세상과 이어, 변화의 울림을 만듭니다."
+    </blockquote>
+  </div>
+</section>
+
+<!-- ── VALUES ── -->
+<section class="section section-dark" id="values">
+  <div class="container">
+    <p class="section-label">Our Core Values</p>
+    <h2 class="section-title">핵심 가치</h2>
+    <div class="divider"></div>
+    <p class="section-sub">이음 민권센터는 네 가지 핵심 가치 위에 세워집니다.</p>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">⚖️</div>
+        <div class="value-ko">바르게 살자</div>
+        <div class="value-en">Live Right</div>
+        <p class="value-desc">정의를 위해 싸우겠다는 헌신. 공동체에서 가장 소외된 이들 — 최근 이민자, 미등록 이민자, 청소년, 여성, 노인 — 과 함께하며 그들의 리더십을 키웁니다.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">💪</div>
+        <div class="value-ko">굳세게 살자</div>
+        <div class="value-en">Live Strong</div>
+        <p class="value-desc">우리 공동체는 불의를 해결할 능력과 힘이 있습니다. 집단적 행동을 통해 공동체의 힘을 기르는 창의적 전략을 당당하게 펼쳐갑니다.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🌱</div>
+        <div class="value-ko">뿌리를 알자</div>
+        <div class="value-en">Know Your Roots</div>
+        <p class="value-desc">우리의 다양한 문화와 역사를 끊임없이 탐구하고 그것이 오늘의 현실을 어떻게 만들었는지 이해합니다. 뿌리를 알아야 함께 성장하고 조직할 수 있습니다.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <div class="value-ko">더불어 살자</div>
+        <div class="value-en">Live Together</div>
+        <p class="value-desc">우리의 해방은 다른 소외된 공동체의 해방과 떼려야 뗄 수 없이 연결되어 있습니다. 연대 속에서 함께 일합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 3 CORE PROJECTS ── -->
+<section class="section section-alt" id="projects">
+  <div class="container">
+    <p class="section-label">3 Core Projects</p>
+    <h2 class="section-title">3대 핵심 프로젝트</h2>
+    <div class="divider"></div>
+    <p class="section-sub">2026년 출범과 함께 세 가지 핵심 프로젝트를 단계적으로 실행합니다.</p>
+
+    <div class="project-tabs">
+      <button class="tab-btn active" onclick="showTab('p1', this)">📊 데이터 기반 권익 옹호</button>
+      <button class="tab-btn" onclick="showTab('p2', this)">⚖️ 법률·사회보장 서비스 이음</button>
+      <button class="tab-btn" onclick="showTab('p3', this)">📚 역사 아카이브 & 리더십</button>
+    </div>
+
+    <!-- Project 1 -->
+    <div class="project-panel active" id="p1">
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-number">Project 1.1</div>
+          <h3>데이터 기반 권익 옹호 (Data-driven Advocacy)</h3>
+        </div>
+        <div class="project-body">
+          <div class="roadmap">
+            <div class="roadmap-step">
+              <div class="step-dot">1단계</div>
+              <div class="step-content">
+                <div class="step-period">2026년 7월 – 8월 · 준비기</div>
+                <div class="step-name">설문지 & 데이터베이스 설계</div>
+                <p class="step-desc">민권 침해 사례 수집을 위한 표준화된 설문지 및 DB 구축. 조사 프레임워크 수립 및 파트너 기관 협의.</p>
+              </div>
+            </div>
+            <div class="roadmap-step">
+              <div class="step-dot">2단계</div>
+              <div class="step-content">
+                <div class="step-period">2026년 9월 – 11월 · 조사기</div>
+                <div class="step-name">애틀랜타 메트로 이민자 실태조사</div>
+                <p class="step-desc">온라인 + 오프라인 병행 조사 실시. 지역 커뮤니티 센터, 교회, SNS 채널을 통한 광범위한 참여 유도.</p>
+              </div>
+            </div>
+            <div class="roadmap-step">
+              <div class="step-dot">3단계</div>
+              <div class="step-content">
+                <div class="step-period">2026년 12월 · 분석 및 발표</div>
+                <div class="step-name">2026 애틀랜타 이민자 민권 보고서 발간</div>
+                <p class="step-desc">수집된 데이터 분석 및 정책 제언 포함 보고서 발간. 기자회견 및 공청회를 통한 공론화.</p>
+              </div>
+            </div>
+          </div>
+          <div class="effect-box">
+            <strong>기대 효과:</strong> 객관적 지표를 통한 정책 제안의 신뢰도 향상 및 지역 사회 내 민권 문제 공론화
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="project-panel" id="p2">
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-number">Project 1.2</div>
+          <h3>법률·사회보장 서비스 이음 (Legal & Social Services Connection)</h3>
+        </div>
+        <div class="project-body">
+          <div class="service-items">
+            <div class="service-item">
+              <div class="service-icon">🏛️</div>
+              <div>
+                <h4>상담 창구 운영 — 법률 클리닉</h4>
+                <p>주 2회 정기 법률 상담 데이(Legal Clinic) 운영. 이민법 및 노동법을 중심으로 무료 법률 자문을 제공하는 프로보노 변호사 네트워크 운영.</p>
+              </div>
+            </div>
+            <div class="service-item">
+              <div class="service-icon">📞</div>
+              <div>
+                <h4>다국어 핫라인 구축</h4>
+                <p>긴급 민권 침해 신고 및 사회보장 서비스 안내를 위한 다국어(한국어·영어·스페인어) 핫라인 개설. 365일 긴급 대응 체계 수립.</p>
+              </div>
+            </div>
+            <div class="service-item">
+              <div class="service-icon">📋</div>
+              <div>
+                <h4>케이스 매니지먼트 — 밀착형 사후 관리</h4>
+                <p>단순 정보 제공을 넘어 실제 서비스 수혜까지 이어지는 개인별 밀착 사례 관리. 각 케이스의 결과를 추적하고 데이터화하여 지속적 개선 실행.</p>
+              </div>
+            </div>
+          </div>
+          <div class="effect-box">
+            <strong>기대 효과:</strong> 정보 소외 계층의 실질적인 권익 보호 및 정부 서비스 접근성 제고
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-panel" id="p3">
+      <div class="project-card">
+        <div class="project-header">
+          <div class="project-number">Project 1.3</div>
+          <h3>공동체 역사 아카이브 & 리더십 교육</h3>
+        </div>
+        <div class="project-body">
+          <div class="program-items">
+            <div class="program-item">
+              <div>
+                <h4>🎙️ '우리의 목소리' 구술사 프로젝트</h4>
+                <p>1세대 이민자들의 삶과 투쟁의 기록을 영상 및 텍스트로 보존. 애틀랜타 한인 이민 역사의 살아있는 아카이브 구축.</p>
+              </div>
+            </div>
+            <div class="program-item">
+              <div>
+                <h4>🌟 이음 리더십 아카데미</h4>
+                <p>청소년 및 차세대 활동가를 위한 민권 역사 및 조직화 기술 교육 프로그램. 연 2회 개최. 커리큘럼에는 지역사회 조직론, 정책 옹호 기술, 한인 민권 역사 포함.</p>
+              </div>
+            </div>
+            <div class="program-item">
+              <div>
+                <h4>💻 디지털 아카이브 플랫폼 구축</h4>
+                <p>수집된 구술사 자료, 사진, 문서를 누구나 접근 가능한 오픈 웹 플랫폼으로 구축. 지역 대학과 협력하여 학술 연구 기반으로도 활용.</p>
+              </div>
+            </div>
+          </div>
+          <div class="effect-box">
+            <strong>기대 효과:</strong> 공동체 정체성 강화 및 지속 가능한 민권 운동의 토대 마련
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PARTNERSHIP ── -->
+<section class="section" id="partnership">
+  <div class="container">
+    <p class="section-label">Partnership Strategy</p>
+    <h2 class="section-title">파트너십 전략</h2>
+    <div class="divider"></div>
+    <p class="section-sub">이음 민권센터의 영향력을 극대화하기 위해 다각적 파트너십을 추진합니다.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>파트너 그룹</th>
+            <th>협력 분야</th>
+            <th>기대 효과</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>⚖️ 법률 전문가 그룹</td>
+            <td><span class="tag">프로보노 법률</span> 변호사 네트워크 구축</td>
+            <td>전문적인 법률 상담 및 소송 지원 역량 확보</td>
+          </tr>
+          <tr>
+            <td>✊ 타 민족 민권 단체</td>
+            <td><span class="tag">연대 캠페인</span> 공동 캠페인 및 정책 제안 (라틴계 단체 등)</td>
+            <td>보편적 민권 이슈에 대한 사회적 목소리 확대</td>
+          </tr>
+          <tr>
+            <td>🎓 지역 대학 및 연구소</td>
+            <td><span class="tag">학술 협업</span> 실태조사 설계 및 데이터 분석</td>
+            <td>보고서의 학술적 전문성 및 공신력 확보</td>
+          </tr>
+          <tr>
+            <td>📰 지역 언론사</td>
+            <td><span class="tag">미디어</span> 정기 칼럼 기고 및 활동 보도 협력</td>
+            <td>센터 인지도 확산 및 민권 의식 고취</td>
+          </tr>
+          <tr>
+            <td>🏛️ 정부 기관 (시·주정부)</td>
+            <td><span class="tag">공공 연계</span> 사회보장 서비스 연계 및 정책 자문</td>
+            <td>공적 자원 활용 극대화 및 제도적 개선 유도</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── GET INVOLVED ── -->
+<section class="section section-alt" id="involve">
+  <div class="container">
+    <p class="section-label">Get Involved</p>
+    <h2 class="section-title">함께해 주세요</h2>
+    <div class="divider"></div>
+    <p class="section-sub">이음 민권센터의 사명에 동참할 다양한 방법이 있습니다.</p>
+    <div class="involve-grid">
+      <div class="involve-card">
+        <div class="involve-icon">🙋</div>
+        <h3>자원봉사</h3>
+        <p>법률 클리닉, 실태조사, 행사 운영 등 다양한 분야에서 여러분의 시간과 재능을 나눠주세요.</p>
+        <a href="#" class="btn">신청하기</a>
+      </div>
+      <div class="involve-card">
+        <div class="involve-icon">💼</div>
+        <h3>채용 정보</h3>
+        <p>이음 민권센터와 함께 정의로운 사회를 만들어 나갈 열정적인 활동가를 찾습니다.</p>
+        <a href="#" class="btn">포지션 보기</a>
+      </div>
+      <div class="involve-card">
+        <div class="involve-icon">📧</div>
+        <h3>뉴스레터 구독</h3>
+        <p>이음 민권센터의 최신 활동 소식, 권리 정보, 이벤트 안내를 받아보세요.</p>
+        <a href="#" class="btn">구독 신청</a>
+      </div>
+      <div class="involve-card">
+        <div class="involve-icon">❤️</div>
+        <h3>후원하기</h3>
+        <p>여러분의 후원이 이민자 공동체의 권리를 지키는 힘이 됩니다. 일시 또는 정기 후원 모두 가능합니다.</p>
+        <a href="#" class="btn" style="background:var(--gold);">후원하기</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h2><span>이음</span> 민권센터</h2>
+      <p>조지아 애틀랜타 한인 및 아시아계 이민자<br>공동체의 사회적 정의를 위해 함께 합니다.<br><br>
+      📍 Atlanta, Georgia<br>
+      📧 info@eumcenter.org<br>
+      📞 (404) 000-0000</p>
+      <div class="footer-social">
+        <a class="social-btn" href="#" aria-label="Instagram">📷</a>
+        <a class="social-btn" href="#" aria-label="Facebook">📘</a>
+        <a class="social-btn" href="#" aria-label="YouTube">▶️</a>
+        <a class="social-btn" href="#" aria-label="Twitter">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>소개</h4>
+      <ul>
+        <li><a href="#mission">미션 & 비전</a></li>
+        <li><a href="#values">핵심 가치</a></li>
+        <li><a href="#">센터 연혁</a></li>
+        <li><a href="#">연락처</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>프로그램</h4>
+      <ul>
+        <li><a href="#projects">데이터 기반 권익 옹호</a></li>
+        <li><a href="#projects">법률 서비스 이음</a></li>
+        <li><a href="#projects">리더십 아카데미</a></li>
+        <li><a href="#projects">역사 아카이브</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>함께하기</h4>
+      <ul>
+        <li><a href="#involve">자원봉사</a></li>
+        <li><a href="#involve">채용</a></li>
+        <li><a href="#involve">뉴스레터</a></li>
+        <li><a href="#involve">후원하기</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 이음 민권센터 (Eum Civil Rights Center) · Atlanta, Georgia · All rights reserved.<br>
+    이음 민권센터는 NAKASEC 네트워크 소속 비영리 단체입니다.</p>
+  </div>
+</footer>
+
+<script>
+  // Hamburger menu
+  document.getElementById('ham').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // Tab switcher for projects
+  function showTab(id, btn) {
+    document.querySelectorAll('.project-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Smooth scroll offset for sticky nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
