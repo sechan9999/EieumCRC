@@ -588,7 +588,7 @@
       </div>
     </div>
     <blockquote style="border-left:4px solid var(--sky);padding:1.2rem 1.5rem;background:var(--gray);border-radius:0 var(--radius) var(--radius) 0;font-size:1.05rem;color:var(--navy);font-weight:600;font-style:italic;">
-      "이음(以音)은 소리로 잇는다는 뜻입니다. 우리는 침묵 속에 있던 목소리들을 세상과 이어, 변화의 울림을 만듭니다."
+      "이음은 잇다의 명사입니다. 소리로 잇는다는 뜻이기도 합니다. 우리는 침묵 속에 있던 목소리들을 세상과 이어, 변화의 울림을 만듭니다."
     </blockquote>
   </div>
 </section>
@@ -819,31 +819,206 @@
         <div class="involve-icon">🙋</div>
         <h3>자원봉사</h3>
         <p>법률 클리닉, 실태조사, 행사 운영 등 다양한 분야에서 여러분의 시간과 재능을 나눠주세요.</p>
-        <a href="#" class="btn">신청하기</a>
+        <button class="btn" onclick="openModal('modal-volunteer')">신청하기</button>
       </div>
       <div class="involve-card">
         <div class="involve-icon">💼</div>
         <h3>채용 정보</h3>
         <p>이음 민권센터와 함께 정의로운 사회를 만들어 나갈 열정적인 활동가를 찾습니다.</p>
-        <a href="#" class="btn">포지션 보기</a>
+        <button class="btn" onclick="openModal('modal-jobs')">포지션 보기</button>
       </div>
       <div class="involve-card">
         <div class="involve-icon">📧</div>
         <h3>뉴스레터 구독</h3>
         <p>이음 민권센터의 최신 활동 소식, 권리 정보, 이벤트 안내를 받아보세요.</p>
-        <a href="#" class="btn">구독 신청</a>
+        <button class="btn" onclick="openModal('modal-newsletter')">구독 신청</button>
       </div>
       <div class="involve-card">
         <div class="involve-icon">❤️</div>
         <h3>후원하기</h3>
         <p>여러분의 후원이 이민자 공동체의 권리를 지키는 힘이 됩니다. 일시 또는 정기 후원 모두 가능합니다.</p>
-        <a href="#" class="btn" style="background:var(--gold);">후원하기</a>
+        <button class="btn" style="background:var(--gold);" onclick="openModal('modal-donate')">후원하기</button>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── FOOTER ── -->
+<!-- ── MODALS ── -->
+<style>
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(10,20,40,0.65); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff; border-radius: 14px; padding: 2.4rem 2.2rem;
+    max-width: 520px; width: 92%; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: modalIn 0.22s ease;
+  }
+  @keyframes modalIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1.2rem;
+    background: none; border: none; font-size: 1.5rem;
+    cursor: pointer; color: #888; line-height: 1;
+  }
+  .modal-close:hover { color: #333; }
+  .modal-box h2 { font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 0.4rem; }
+  .modal-box p.modal-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .modal-form label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; margin-top: 1rem; }
+  .modal-form input, .modal-form select, .modal-form textarea {
+    width: 100%; padding: 0.65rem 0.9rem; border: 1.5px solid #ddd;
+    border-radius: 8px; font-size: 0.92rem; font-family: inherit;
+    transition: border-color 0.2s; outline: none;
+  }
+  .modal-form input:focus, .modal-form select:focus, .modal-form textarea:focus { border-color: var(--sky); }
+  .modal-form textarea { resize: vertical; min-height: 90px; }
+  .modal-submit {
+    margin-top: 1.5rem; width: 100%; padding: 0.8rem;
+    background: var(--navy); color: #fff; border: none;
+    border-radius: 8px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .modal-submit:hover { background: var(--blue); }
+  .modal-submit.gold { background: var(--gold); }
+  .modal-submit.gold:hover { background: #b8862e; }
+  .job-list { list-style: none; padding: 0; margin: 0; }
+  .job-item { border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem; }
+  .job-item h4 { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 0.2rem; }
+  .job-item span { font-size: 0.78rem; background: rgba(44,95,138,0.1); color: var(--blue); border-radius: 20px; padding: 0.15rem 0.6rem; font-weight: 700; }
+  .job-item p { font-size: 0.84rem; color: var(--muted); margin-top: 0.4rem; }
+  .job-item a { display: inline-block; margin-top: 0.6rem; font-size: 0.83rem; font-weight: 700; color: var(--sky); text-decoration: underline; }
+  .donate-amounts { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.7rem; margin: 0.5rem 0 1rem; }
+  .amt-btn {
+    padding: 0.6rem; border: 2px solid #ddd; border-radius: 8px;
+    background: #fff; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s; color: var(--navy);
+  }
+  .amt-btn.selected, .amt-btn:hover { border-color: var(--gold); background: #fdf3e2; color: var(--gold); }
+  .success-msg { text-align: center; padding: 1.5rem 0; }
+  .success-msg .check { font-size: 3rem; }
+  .success-msg h3 { color: var(--navy); font-size: 1.2rem; margin: 0.5rem 0 0.3rem; }
+  .success-msg p { color: var(--muted); font-size: 0.9rem; }
+</style>
+
+<!-- 자원봉사 모달 -->
+<div class="modal-overlay" id="modal-volunteer">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-volunteer')">✕</button>
+    <h2>🙋 자원봉사 신청</h2>
+    <p class="modal-sub">법률 클리닉, 실태조사, 행사 운영 등 원하시는 분야를 선택해 주세요.</p>
+    <form class="modal-form" onsubmit="submitForm(event,'modal-volunteer')">
+      <label>이름 *</label>
+      <input type="text" placeholder="홍길동" required>
+      <label>이메일 *</label>
+      <input type="email" placeholder="example@email.com" required>
+      <label>연락처</label>
+      <input type="tel" placeholder="010-0000-0000">
+      <label>참여 희망 분야 *</label>
+      <select required>
+        <option value="">선택해 주세요</option>
+        <option>법률 클리닉 보조</option>
+        <option>이민자 실태조사</option>
+        <option>행사 운영 지원</option>
+        <option>번역 · 통역</option>
+        <option>소셜미디어 콘텐츠</option>
+        <option>기타</option>
+      </select>
+      <label>간단한 자기소개</label>
+      <textarea placeholder="경험, 동기, 가능한 시간 등을 자유롭게 적어주세요."></textarea>
+      <button type="submit" class="modal-submit">신청 완료하기</button>
+    </form>
+  </div>
+</div>
+
+<!-- 채용 모달 -->
+<div class="modal-overlay" id="modal-jobs">
+  <div class="modal-box" style="max-width:580px">
+    <button class="modal-close" onclick="closeModal('modal-jobs')">✕</button>
+    <h2>💼 채용 정보</h2>
+    <p class="modal-sub">이음 민권센터와 함께 정의로운 사회를 만들어 나갈 분을 찾습니다.</p>
+    <ul class="job-list">
+      <li class="job-item">
+        <h4>커뮤니티 오거나이저</h4>
+        <span>정규직 · Full-time</span>
+        <p>조지아 애틀랜타 한인 및 아시아계 이민자 공동체 조직화 담당. 영어/한국어 이중언어 필수.</p>
+        <a href="mailto:info@eumcenter.org?subject=커뮤니티 오거나이저 지원">지원하기 →</a>
+      </li>
+      <li class="job-item">
+        <h4>법률 서비스 코디네이터</h4>
+        <span>파트타임 · Part-time</span>
+        <p>법률 클리닉 운영 보조 및 케이스 매니지먼트. 이민법 또는 사회복지 관련 경험 우대.</p>
+        <a href="mailto:info@eumcenter.org?subject=법률 서비스 코디네이터 지원">지원하기 →</a>
+      </li>
+      <li class="job-item">
+        <h4>데이터 & 리서치 인턴</h4>
+        <span>인턴십 · Internship</span>
+        <p>이민자 실태조사 데이터 수집 및 분석 지원. 사회과학 또는 공공정책 전공 학생 우대.</p>
+        <a href="mailto:info@eumcenter.org?subject=데이터 리서치 인턴 지원">지원하기 →</a>
+      </li>
+    </ul>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;">문의: <a href="mailto:info@eumcenter.org" style="color:var(--sky);">info@eumcenter.org</a></p>
+  </div>
+</div>
+
+<!-- 뉴스레터 모달 -->
+<div class="modal-overlay" id="modal-newsletter">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-newsletter')">✕</button>
+    <h2>📧 뉴스레터 구독</h2>
+    <p class="modal-sub">이음 민권센터의 최신 소식, 권리 정보, 행사 안내를 이메일로 받아보세요. 월 1–2회 발송됩니다.</p>
+    <form class="modal-form" onsubmit="submitForm(event,'modal-newsletter')">
+      <label>이름 *</label>
+      <input type="text" placeholder="홍길동" required>
+      <label>이메일 *</label>
+      <input type="email" placeholder="example@email.com" required>
+      <label>관심 분야 (복수 선택 가능)</label>
+      <select>
+        <option>전체 소식</option>
+        <option>이민 법률 정보</option>
+        <option>민권 캠페인</option>
+        <option>커뮤니티 행사</option>
+        <option>청소년 프로그램</option>
+      </select>
+      <button type="submit" class="modal-submit">구독 신청하기</button>
+    </form>
+  </div>
+</div>
+
+<!-- 후원 모달 -->
+<div class="modal-overlay" id="modal-donate">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-donate')">✕</button>
+    <h2>❤️ 후원하기</h2>
+    <p class="modal-sub">여러분의 후원이 이민자 공동체의 권리를 지키는 힘이 됩니다.</p>
+    <form class="modal-form" onsubmit="submitForm(event,'modal-donate')">
+      <label>후원 금액 선택</label>
+      <div class="donate-amounts">
+        <button type="button" class="amt-btn" onclick="selectAmt(this,'$10')">$10</button>
+        <button type="button" class="amt-btn" onclick="selectAmt(this,'$25')">$25</button>
+        <button type="button" class="amt-btn selected" onclick="selectAmt(this,'$50')">$50</button>
+        <button type="button" class="amt-btn" onclick="selectAmt(this,'$100')">$100</button>
+        <button type="button" class="amt-btn" onclick="selectAmt(this,'$250')">$250</button>
+        <button type="button" class="amt-btn" onclick="selectAmt(this,'기타')">기타</button>
+      </div>
+      <label>후원 유형</label>
+      <select>
+        <option>일시 후원 (One-time)</option>
+        <option>월정기 후원 (Monthly)</option>
+        <option>연간 후원 (Annual)</option>
+      </select>
+      <label>이름 *</label>
+      <input type="text" placeholder="홍길동" required>
+      <label>이메일 *</label>
+      <input type="email" placeholder="example@email.com" required>
+      <button type="submit" class="modal-submit gold">후원 신청하기</button>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">이음 민권센터는 501(c)(3) 비영리 단체입니다. 후원금은 세금 공제 혜택을 받을 수 있습니다.</p>
+    </form>
+  </div>
+</div>
+
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
@@ -905,6 +1080,40 @@
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
+  }
+
+  // Modal system
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // Close on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
+  });
+  function submitForm(e, modalId) {
+    e.preventDefault();
+    const box = document.querySelector(`#${modalId} .modal-box`);
+    box.innerHTML = `<div class="success-msg">
+      <div class="check">✅</div>
+      <h3>신청이 완료되었습니다!</h3>
+      <p>이음 민권센터에서 곧 연락드리겠습니다.<br>감사합니다.</p>
+      <button class="modal-submit" style="margin-top:1.5rem;max-width:200px;margin-left:auto;margin-right:auto;display:block;" onclick="closeModal('${modalId}')">닫기</button>
+    </div>`;
+  }
+  function selectAmt(btn, val) {
+    btn.closest('.donate-amounts').querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
   }
 
   // Smooth scroll offset for sticky nav
