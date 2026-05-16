@@ -1,4 +1,4 @@
-# 이음 민권센터 (Eum Civil Rights Center)
+# 이음 민권센터 (Eieum Civil Rights Center)
 
 > 조지아 애틀랜타 한인 및 아시아계 이민자 공동체의 사회적·인종적·경제적 정의를 위해 함께 합니다.
 
@@ -36,7 +36,7 @@ EieumCRC/
 ## 연락처
 
 - 📍 Atlanta, Georgia
-- 📧 info@eumcenter.org
+- 📧 18project18@gmail.com
 
 ---
 
