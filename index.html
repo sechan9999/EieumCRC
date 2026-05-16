@@ -518,7 +518,7 @@
       <ul class="dropdown-menu">
         <li><a href="#mission">미션 & 비전</a></li>
         <li><a href="#values">핵심 가치</a></li>
-        <li><a href="#">센터 소개</a></li>
+        <li><a href="#" onclick="event.preventDefault();openModal('modal-about')">센터 소개</a></li>
         <li><a href="#">연락처</a></li>
       </ul>
     </li>
@@ -902,6 +902,85 @@
   .success-msg h3 { color: var(--navy); font-size: 1.2rem; margin: 0.5rem 0 0.3rem; }
   .success-msg p { color: var(--muted); font-size: 0.9rem; }
 </style>
+
+<!-- 센터 소개 모달 -->
+<div class="modal-overlay" id="modal-about">
+  <div class="modal-box" style="max-width:680px;max-height:85vh;overflow-y:auto;">
+    <button class="modal-close" onclick="closeModal('modal-about')">&#x2715;</button>
+    <h2>&#x1F3DB;&#xFE0F; 이음 민권센터 소개</h2>
+    <p class="modal-sub">기관 연혁 및 정관 핵심 요약</p>
+
+    <!-- 기관 기본 정보 -->
+    <div style="background:var(--gray);border-radius:10px;padding:1.2rem 1.4rem;margin-bottom:1.5rem;">
+      <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--sky);margin-bottom:0.5rem;">기관 기본 정보</div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+        <tr><td style="padding:0.4rem 0.8rem 0.4rem 0;font-weight:700;color:var(--navy);width:35%;white-space:nowrap;">기관명</td><td style="color:var(--text);">이음 민권센터<br><span style="font-size:0.82rem;color:var(--muted);">Eieum Civil Rights Center</span></td></tr>
+        <tr><td style="padding:0.4rem 0.8rem 0.4rem 0;font-weight:700;color:var(--navy);">설립 연도</td><td style="color:var(--text);">2026년</td></tr>
+        <tr><td style="padding:0.4rem 0.8rem 0.4rem 0;font-weight:700;color:var(--navy);">소재지</td><td style="color:var(--text);">Atlanta, Georgia (둘루스 중심)</td></tr>
+        <tr><td style="padding:0.4rem 0.8rem 0.4rem 0;font-weight:700;color:var(--navy);">네트워크</td><td style="color:var(--text);">NAKASEC 제휴 기관</td></tr>
+        <tr><td style="padding:0.4rem 0.8rem 0.4rem 0;font-weight:700;color:var(--navy);">연락처</td><td style="color:var(--text);"><a href="mailto:18project18@gmail.com" style="color:var(--sky);">18project18@gmail.com</a></td></tr>
+      </table>
+    </div>
+
+    <!-- 설립 목적 -->
+    <div style="margin-bottom:1.5rem;">
+      <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--sky);margin-bottom:0.7rem;">설립 목적</div>
+      <p style="font-size:0.9rem;color:var(--text);line-height:1.75;">
+        2026년 7월 현재, 애틀랜타 메트로 지역(특히 둘루스 중심)은 급변하는 사회 환경 속에서 다양한 민권 문제에 직면하고 있습니다. 특히 소수민족 커뮤니티는 언어 장벽, 문화적 차이, 정보 부족 등으로 인해 법률 및 사회보장 서비스 접근에 어려움을 겪고 있으며, 이는 권익 침해로 이어지는 경우가 많습니다.
+      </p>
+      <p style="font-size:0.9rem;color:var(--text);line-height:1.75;margin-top:0.7rem;">
+        이음 민권센터는 이러한 문제에 대한 체계적인 대응과 예방을 통해 지역 사회 구성원들의 <strong>민권 신장</strong>과 <strong>공동체 역량 강화</strong>를 목표로 합니다.
+      </p>
+    </div>
+
+    <!-- 정관 요약 -->
+    <div style="border-top:2px solid var(--gold);padding-top:1.2rem;">
+      <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">정관 핵심 요약</div>
+
+      <div style="margin-bottom:1.2rem;">
+        <div style="font-weight:800;color:var(--navy);font-size:0.95rem;margin-bottom:0.5rem;">1. 총칙</div>
+        <div style="font-size:0.86rem;color:var(--muted);line-height:1.7;padding-left:0.8rem;border-left:3px solid var(--sky);">
+          <b>제1조 (명칭)</b> 본 기관은 "이음 민권센터" (Eieum Civil Rights Center)라 칭한다.<br>
+          <b>제2조 (목적)</b> 본 기관은 애틀랜타 메트로 지역 사회 구성원들의 민권 신장과 공동체 역량 강화를 목적으로 한다.
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.2rem;">
+        <div style="font-weight:800;color:var(--navy);font-size:0.95rem;margin-bottom:0.5rem;">2. 이사회</div>
+        <div style="font-size:0.86rem;color:var(--muted);line-height:1.7;padding-left:0.8rem;border-left:3px solid var(--sky);">
+          <b>제3조 (집단 지도 체제)</b> 모든 주요 의사결정은 이사회 심의·의결을 거친다. 이사장은 이사회를 대표하며, 정관 및 이사회 규정 내에서만 권한을 행사한다.<br>
+          <b>제4조 (구성)</b> 이사장 포함 이사 5인 이상 10인 이하. 민권 신장 및 공동체 발전에 기여할 덕망과 전문성을 갖춘 자.<br>
+          <b>제5조 (소집 및 의결)</b> 정기 이사회 연 1회 이상. 재적 이사 과반수 출석 개회, 출석 이사 과반수 찬성으로 의결.
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.2rem;">
+        <div style="font-weight:800;color:var(--navy);font-size:0.95rem;margin-bottom:0.5rem;">3. 임원</div>
+        <div style="font-size:0.86rem;color:var(--muted);line-height:1.7;padding-left:0.8rem;border-left:3px solid var(--sky);">
+          <b>제6조 (임원)</b> 이사장 1인, 이사 5~10인, 감사 1인.<br>
+          <b>제7조 (임기)</b> 임기 2년, 연임 가능. 결원 시 2개월 이내 보선.
+        </div>
+      </div>
+
+      <div style="margin-bottom:1.2rem;">
+        <div style="font-weight:800;color:var(--navy);font-size:0.95rem;margin-bottom:0.5rem;">4. 재정</div>
+        <div style="font-size:0.86rem;color:var(--muted);line-height:1.7;padding-left:0.8rem;border-left:3px solid var(--sky);">
+          <b>제8조 (재정)</b> 회비, 후원금, 보조금 및 기타 수입으로 충당.
+        </div>
+      </div>
+
+      <div style="margin-bottom:0.5rem;">
+        <div style="font-weight:800;color:var(--navy);font-size:0.95rem;margin-bottom:0.5rem;">5. 부칙</div>
+        <div style="font-size:0.86rem;color:var(--muted);line-height:1.7;padding-left:0.8rem;border-left:3px solid var(--sky);">
+          <b>제9조 (정관 변경)</b> 이사회 의결 후 총회에서 재적 회원 2/3 이상 찬성으로 의결.<br>
+          <b>제10조 (해산)</b> 이사회 의결 후 총회에서 재적 회원 2/3 이상 찬성으로 의결. 잔여 재산은 유사 공익 사업에 귀속.
+        </div>
+      </div>
+    </div>
+
+    <button class="modal-submit" style="margin-top:1.5rem;" onclick="closeModal('modal-about')">닫기</button>
+  </div>
+</div>
 
 <!-- 자원봉사 모달 -->
 <div class="modal-overlay" id="modal-volunteer">
