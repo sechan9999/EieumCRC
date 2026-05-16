@@ -556,8 +556,8 @@
   <h1>함께 <em>이음</em>으로<br>더 정의로운 세상을</h1>
   <p>이음 민권센터는 조지아 애틀랜타의 한인 및 아시아계 이민자 공동체가 사회적·인종적·경제적 정의를 실현할 수 있도록 조직하고 연결합니다.</p>
   <div class="hero-btns">
-    <a href="#projects" class="btn btn-gold">핵심 프로젝트 보기</a>
-    <a href="#involve" class="btn btn-outline">함께 참여하기</a>
+    <button class="btn btn-gold" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth', block:'start'})">핵심 프로젝트 보기</button>
+    <button class="btn btn-outline" onclick="openModal('modal-donate')">함께 참여하기</button>
   </div>
 </header>
 
@@ -993,7 +993,7 @@
     <button class="modal-close" onclick="closeModal('modal-donate')">✕</button>
     <h2>❤️ 후원하기</h2>
     <p class="modal-sub">여러분의 후원이 이민자 공동체의 권리를 지키는 힘이 됩니다.</p>
-    <form class="modal-form" onsubmit="submitForm(event,'modal-donate')">
+    <form class="modal-form" onsubmit="sendDonateEmail(event)">
       <label>후원 금액 선택</label>
       <div class="donate-amounts">
         <button type="button" class="amt-btn" onclick="selectAmt(this,'$10')">$10</button>
@@ -1004,17 +1004,17 @@
         <button type="button" class="amt-btn" onclick="selectAmt(this,'기타')">기타</button>
       </div>
       <label>후원 유형</label>
-      <select>
+      <select id="donate-type">
         <option>일시 후원 (One-time)</option>
         <option>월정기 후원 (Monthly)</option>
         <option>연간 후원 (Annual)</option>
       </select>
       <label>이름 *</label>
-      <input type="text" placeholder="홍길동" required>
+      <input type="text" id="donate-name" placeholder="홍길동" required>
       <label>이메일 *</label>
-      <input type="email" placeholder="example@email.com" required>
-      <button type="submit" class="modal-submit gold">후원 신청하기</button>
-      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">이음 민권센터는 501(c)(3) 비영리 단체입니다. 후원금은 세금 공제 혜택을 받을 수 있습니다.</p>
+      <input type="email" id="donate-email" placeholder="example@email.com" required>
+      <button type="submit" class="modal-submit gold">📧 후원 신청하기 (이메일 발송)</button>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">이음 민권센터는 비영리 단체입니다. 버튼 클릭 시 이메일 앱이 열립니다.</p>
     </form>
   </div>
 </div>
@@ -1129,6 +1129,26 @@
   function selectAmt(btn, val) {
     btn.closest('.donate-amounts').querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
+  }
+  function sendDonateEmail(e) {
+    e.preventDefault();
+    const amt   = document.querySelector('#modal-donate .amt-btn.selected')?.textContent || '미선택';
+    const type  = document.getElementById('donate-type')?.value || '';
+    const name  = document.getElementById('donate-name')?.value || '';
+    const email = document.getElementById('donate-email')?.value || '';
+    const subj  = encodeURIComponent(`[이음 민권센터 후원 신청] ${name} - ${amt}`);
+    const body  = encodeURIComponent(
+      `후원 신청 정보\n\n이름: ${name}\n연락 이메일: ${email}\n후원 금액: ${amt}\n후원 유형: ${type}\n\n이음 민권센터를 응원합니다. 감사합니다.`
+    );
+    window.open(`mailto:18project18@gmail.com?subject=${subj}&body=${body}`);
+    // Show success
+    const box = document.querySelector('#modal-donate .modal-box');
+    box.innerHTML = `<div class="success-msg">
+      <div class="check">✅</div>
+      <h3>이메일이 준비되었습니다!</h3>
+      <p>이메일 앱에서 <strong>18project18@gmail.com</strong>으로 발송해 주세요.<br>감사합니다.</p>
+      <button class="modal-submit" style="margin-top:1.5rem;max-width:200px;margin:1.5rem auto 0;display:block;" onclick="closeModal('modal-donate')">닫기</button>
+    </div>`;
   }
 
   // Smooth scroll offset for sticky nav
