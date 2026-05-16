@@ -910,9 +910,11 @@
   // Smooth scroll offset for sticky nav
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
+      e.preventDefault();
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      const target = document.querySelector(href);
       if (target) {
-        e.preventDefault();
         window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
       }
     });
