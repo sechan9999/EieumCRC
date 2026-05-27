@@ -1030,15 +1030,15 @@
     <button class="modal-close" onclick="closeModal('modal-volunteer')">✕</button>
     <h2>🙋 자원봉사 신청</h2>
     <p class="modal-sub">법률 클리닉, 실태조사, 행사 운영 등 원하시는 분야를 선택해 주세요.</p>
-    <form class="modal-form" onsubmit="submitForm(event,'modal-volunteer')">
+    <form class="modal-form" onsubmit="submitVolunteerForm(event)">
       <label>이름 *</label>
-      <input type="text" placeholder="홍길동" required>
+      <input type="text" name="name" placeholder="홍길동" required>
       <label>이메일 *</label>
-      <input type="email" placeholder="example@email.com" required>
+      <input type="email" name="email" placeholder="example@email.com" required>
       <label>연락처</label>
-      <input type="tel" placeholder="010-0000-0000">
+      <input type="tel" name="phone" placeholder="010-0000-0000">
       <label>참여 희망 분야 *</label>
-      <select required>
+      <select name="interest_area" required>
         <option value="">선택해 주세요</option>
         <option>법률 클리닉 보조</option>
         <option>이민자 실태조사</option>
@@ -1048,7 +1048,7 @@
         <option>기타</option>
       </select>
       <label>간단한 자기소개</label>
-      <textarea placeholder="경험, 동기, 가능한 시간 등을 자유롭게 적어주세요."></textarea>
+      <textarea name="introduction" placeholder="경험, 동기, 가능한 시간 등을 자유롭게 적어주세요."></textarea>
       <button type="submit" class="modal-submit">신청 완료하기</button>
     </form>
   </div>
@@ -1090,13 +1090,13 @@
     <button class="modal-close" onclick="closeModal('modal-newsletter')">✕</button>
     <h2>📧 뉴스레터 구독</h2>
     <p class="modal-sub">이음 민권센터의 최신 소식, 권리 정보, 행사 안내를 이메일로 받아보세요. 월 1–2회 발송됩니다.</p>
-    <form class="modal-form" onsubmit="submitForm(event,'modal-newsletter')">
+    <form class="modal-form" onsubmit="submitNewsletterForm(event)">
       <label>이름 *</label>
-      <input type="text" placeholder="홍길동" required>
+      <input type="text" name="name" placeholder="홍길동" required>
       <label>이메일 *</label>
-      <input type="email" placeholder="example@email.com" required>
+      <input type="email" name="email" placeholder="example@email.com" required>
       <label>관심 분야 (복수 선택 가능)</label>
-      <select>
+      <select name="topics">
         <option>전체 소식</option>
         <option>이민 법률 정보</option>
         <option>민권 캠페인</option>
@@ -1125,17 +1125,17 @@
         <button type="button" class="amt-btn" onclick="selectAmt(this,'기타')">기타</button>
       </div>
       <label>후원 유형</label>
-      <select id="donate-type">
+      <select id="donate-type" name="donation_type">
         <option>일시 후원 (One-time)</option>
         <option>월정기 후원 (Monthly)</option>
         <option>연간 후원 (Annual)</option>
       </select>
       <label>이름 *</label>
-      <input type="text" id="donate-name" placeholder="홍길동" required>
+      <input type="text" id="donate-name" name="name" placeholder="홍길동" required>
       <label>이메일 *</label>
-      <input type="email" id="donate-email" placeholder="example@email.com" required>
-      <button type="submit" class="modal-submit gold">📧 후원 신청하기 (이메일 발송)</button>
-      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">이음 민권센터는 비영리 단체입니다. 버튼 클릭 시 이메일 앱이 열립니다.</p>
+      <input type="email" id="donate-email" name="email" placeholder="example@email.com" required>
+      <button type="submit" class="modal-submit gold">📧 후원 신청하기</button>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">제출하시면 이음 민권센터 메일함으로 바로 접수됩니다.</p>
     </form>
   </div>
 </div>
@@ -1222,54 +1222,122 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
   });
-  function submitForm(e, modalId) {
-    e.preventDefault();
-    if (modalId === 'modal-donate') {
-      // 후원: 18project18@gmail.com으로 이메일 전송
-      const form = e.target;
-      const inputs = form.querySelectorAll('input, select');
-      const amt = form.querySelector('.amt-btn.selected') ? form.querySelector('.amt-btn.selected').textContent : '';
-      let type = '', name = '', email = '';
-      inputs.forEach(inp => {
-        if (inp.type === 'text') name = inp.value;
-        if (inp.type === 'email') email = inp.value;
-        if (inp.tagName === 'SELECT') type = inp.value;
-      });
-      const subject = encodeURIComponent(`[이음 민권센터 후원 신청] ${name} - ${amt}`);
-      const body = encodeURIComponent(`후원 신청 정보\n\n이름: ${name}\n이메일: ${email}\n후원 금액: ${amt}\n후원 유형: ${type}\n\n감사합니다.`);
-      window.location.href = `mailto:18project18@gmail.com?subject=${subject}&body=${body}`;
+  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/18project18@gmail.com';
+
+  async function deliverForm(form, options) {
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalText = submitButton ? submitButton.innerHTML : '';
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = options.pendingText || '전송 중...';
     }
+
+    const data = new FormData(form);
+    data.append('_subject', options.subject);
+    data.append('_template', 'table');
+    data.append('_captcha', 'false');
+    data.append('_replyto', data.get('email') || '18project18@gmail.com');
+    if (options.autoresponse) {
+      data.append('_autoresponse', options.autoresponse);
+    }
+
+    if (options.extraFields) {
+      Object.entries(options.extraFields).forEach(([key, value]) => data.append(key, value));
+    }
+
+    try {
+      const response = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: data
+      });
+
+      if (!response.ok) {
+        throw new Error('Form submission failed');
+      }
+
+      showSuccess(options.modalId, options.successTitle, options.successBody);
+    } catch (error) {
+      showError(options.modalId, options.errorTitle, options.errorBody);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+      }
+    }
+  }
+
+  function showSuccess(modalId, title, body) {
     const box = document.querySelector(`#${modalId} .modal-box`);
     box.innerHTML = `<div class="success-msg">
       <div class="check">✅</div>
-      <h3>신청이 완료되었습니다!</h3>
-      <p>이음 민권센터에서 곧 연락드리겠습니다.<br>감사합니다.</p>
+      <h3>${title}</h3>
+      <p>${body}</p>
       <button class="modal-submit" style="margin-top:1.5rem;max-width:200px;margin-left:auto;margin-right:auto;display:block;" onclick="closeModal('${modalId}')">닫기</button>
     </div>`;
   }
+
+  function showError(modalId, title, body) {
+    const box = document.querySelector(`#${modalId} .modal-box`);
+    box.innerHTML = `<div class="success-msg">
+      <div class="check">⚠️</div>
+      <h3>${title}</h3>
+      <p>${body}</p>
+      <button class="modal-submit" style="margin-top:1.5rem;max-width:220px;margin-left:auto;margin-right:auto;display:block;" onclick="closeModal('${modalId}')">닫기</button>
+    </div>`;
+  }
+
+  function submitVolunteerForm(e) {
+    e.preventDefault();
+    deliverForm(e.target, {
+      modalId: 'modal-volunteer',
+      subject: '[이음 민권센터] 자원봉사 신청',
+      pendingText: '접수 중...',
+      autoresponse: '이음 민권센터 자원봉사 신청이 접수되었습니다. 작성해 주셔서 감사합니다. 검토 후 가능한 한 빠르게 연락드리겠습니다.',
+      successTitle: '자원봉사 신청이 접수되었습니다!',
+      successBody: '작성해 주신 내용이 18project18@gmail.com 으로 전송되었습니다.<br>이음 민권센터에서 곧 연락드리겠습니다.',
+      errorTitle: '접수 중 문제가 발생했습니다.',
+      errorBody: '잠시 후 다시 시도해 주세요. 문제가 계속되면 18project18@gmail.com 으로 직접 연락해 주세요.'
+    });
+  }
+
+  function submitNewsletterForm(e) {
+    e.preventDefault();
+    deliverForm(e.target, {
+      modalId: 'modal-newsletter',
+      subject: '[이음 민권센터] 뉴스레터 구독 신청',
+      pendingText: '구독 처리 중...',
+      autoresponse: '이음 민권센터 뉴스레터 구독 신청이 접수되었습니다. 앞으로 센터 소식과 주요 안내를 이메일로 보내드리겠습니다. 감사합니다.',
+      successTitle: '뉴스레터 구독이 신청되었습니다!',
+      successBody: '작성해 주신 내용이 18project18@gmail.com 으로 전송되었습니다.<br>다음 소식부터 메일 안내를 드릴게요.',
+      errorTitle: '구독 신청 중 문제가 발생했습니다.',
+      errorBody: '잠시 후 다시 시도해 주세요. 문제가 계속되면 18project18@gmail.com 으로 직접 연락해 주세요.'
+    });
+  }
+
   function selectAmt(btn, val) {
     btn.closest('.donate-amounts').querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
   }
   function sendDonateEmail(e) {
     e.preventDefault();
-    const amt   = document.querySelector('#modal-donate .amt-btn.selected')?.textContent || '미선택';
-    const type  = document.getElementById('donate-type')?.value || '';
-    const name  = document.getElementById('donate-name')?.value || '';
-    const email = document.getElementById('donate-email')?.value || '';
-    const subj  = encodeURIComponent(`[이음 민권센터 후원 신청] ${name} - ${amt}`);
-    const body  = encodeURIComponent(
-      `후원 신청 정보\n\n이름: ${name}\n연락 이메일: ${email}\n후원 금액: ${amt}\n후원 유형: ${type}\n\n이음 민권센터를 응원합니다. 감사합니다.`
-    );
-    window.open(`mailto:18project18@gmail.com?subject=${subj}&body=${body}`);
-    // Show success
-    const box = document.querySelector('#modal-donate .modal-box');
-    box.innerHTML = `<div class="success-msg">
-      <div class="check">✅</div>
-      <h3>이메일이 준비되었습니다!</h3>
-      <p>이메일 앱에서 <strong>18project18@gmail.com</strong>으로 발송해 주세요.<br>감사합니다.</p>
-      <button class="modal-submit" style="margin-top:1.5rem;max-width:200px;margin:1.5rem auto 0;display:block;" onclick="closeModal('modal-donate')">닫기</button>
-    </div>`;
+    const form = e.target;
+    const amount = form.querySelector('.amt-btn.selected')?.textContent || '미선택';
+    const name = document.getElementById('donate-name')?.value || '';
+
+    deliverForm(form, {
+      modalId: 'modal-donate',
+      subject: `[이음 민권센터] 후원 신청 - ${name}`,
+      pendingText: '접수 중...',
+      autoresponse: '이음 민권센터 후원 신청이 접수되었습니다. 소중한 마음에 감사드리며, 확인 후 후원 안내를 이메일로 보내드리겠습니다.',
+      extraFields: {
+        donation_amount: amount
+      },
+      successTitle: '후원 신청이 접수되었습니다!',
+      successBody: '후원 희망 정보가 18project18@gmail.com 으로 전송되었습니다.<br>이음 민권센터에서 안내를 드리겠습니다.',
+      errorTitle: '후원 신청 중 문제가 발생했습니다.',
+      errorBody: '잠시 후 다시 시도해 주세요. 문제가 계속되면 18project18@gmail.com 으로 직접 연락해 주세요.'
+    });
   }
 
   // Smooth scroll offset for sticky nav

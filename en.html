@@ -910,15 +910,15 @@
     <button class="modal-close" onclick="closeModal('modal-volunteer')">&#x2715;</button>
     <h2>&#x1F64B; Volunteer Application</h2>
     <p class="modal-sub">Choose the area where you'd like to contribute your time and skills.</p>
-    <form class="modal-form" onsubmit="submitForm(event,'modal-volunteer')">
+    <form class="modal-form" onsubmit="submitVolunteerForm(event)">
       <label>Full Name *</label>
-      <input type="text" placeholder="Jane Doe" required>
+      <input type="text" name="name" placeholder="Jane Doe" required>
       <label>Email *</label>
-      <input type="email" placeholder="example@email.com" required>
+      <input type="email" name="email" placeholder="example@email.com" required>
       <label>Phone</label>
-      <input type="tel" placeholder="(404) 000-0000">
+      <input type="tel" name="phone" placeholder="(404) 000-0000">
       <label>Area of Interest *</label>
-      <select required>
+      <select name="interest_area" required>
         <option value="">Please select</option>
         <option>Legal Clinic Support</option>
         <option>Immigrant Survey Research</option>
@@ -928,7 +928,7 @@
         <option>Other</option>
       </select>
       <label>Brief Introduction</label>
-      <textarea placeholder="Share your experience, motivation, and availability."></textarea>
+      <textarea name="introduction" placeholder="Share your experience, motivation, and availability."></textarea>
       <button type="submit" class="modal-submit">Submit Application</button>
     </form>
   </div>
@@ -970,13 +970,13 @@
     <button class="modal-close" onclick="closeModal('modal-newsletter')">&#x2715;</button>
     <h2>&#x1F4E7; Newsletter Signup</h2>
     <p class="modal-sub">Get our latest updates, rights information, and event announcements. Sent 1&ndash;2 times per month.</p>
-    <form class="modal-form" onsubmit="submitForm(event,'modal-newsletter')">
+    <form class="modal-form" onsubmit="submitNewsletterForm(event)">
       <label>Full Name *</label>
-      <input type="text" placeholder="Jane Doe" required>
+      <input type="text" name="name" placeholder="Jane Doe" required>
       <label>Email *</label>
-      <input type="email" placeholder="example@email.com" required>
+      <input type="email" name="email" placeholder="example@email.com" required>
       <label>Topics of Interest</label>
-      <select>
+      <select name="topics">
         <option>All News</option>
         <option>Immigration Law Updates</option>
         <option>Civil Rights Campaigns</option>
@@ -1005,17 +1005,17 @@
         <button type="button" class="amt-btn" onclick="selectAmt(this,'Other')">Other</button>
       </div>
       <label>Donation Type</label>
-      <select id="en-donate-type">
+      <select id="en-donate-type" name="donation_type">
         <option>One-time Donation</option>
         <option>Monthly Recurring</option>
         <option>Annual Donation</option>
       </select>
       <label>Full Name *</label>
-      <input type="text" id="en-donate-name" placeholder="Jane Doe" required>
+      <input type="text" id="en-donate-name" name="name" placeholder="Jane Doe" required>
       <label>Email *</label>
-      <input type="email" id="en-donate-email" placeholder="example@email.com" required>
-      <button type="submit" class="modal-submit gold">&#x1F4E7; Donate (Send Email)</button>
-      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">Clicking will open your email app pre-filled for 18project18@gmail.com.</p>
+      <input type="email" id="en-donate-email" name="email" placeholder="example@email.com" required>
+      <button type="submit" class="modal-submit gold">&#x1F4E7; Submit Donation Request</button>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;text-align:center;">Submitting will send the request directly to 18project18@gmail.com.</p>
     </form>
   </div>
 </div>
@@ -1113,38 +1113,122 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
   });
-  function submitForm(e, modalId) {
-    e.preventDefault();
+  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/18project18@gmail.com';
+
+  async function deliverForm(form, options) {
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalText = submitButton ? submitButton.innerHTML : '';
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = options.pendingText || 'Sending...';
+    }
+
+    const data = new FormData(form);
+    data.append('_subject', options.subject);
+    data.append('_template', 'table');
+    data.append('_captcha', 'false');
+    data.append('_replyto', data.get('email') || '18project18@gmail.com');
+    if (options.autoresponse) {
+      data.append('_autoresponse', options.autoresponse);
+    }
+
+    if (options.extraFields) {
+      Object.entries(options.extraFields).forEach(([key, value]) => data.append(key, value));
+    }
+
+    try {
+      const response = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: data
+      });
+
+      if (!response.ok) {
+        throw new Error('Form submission failed');
+      }
+
+      showSuccess(options.modalId, options.successTitle, options.successBody);
+    } catch (error) {
+      showError(options.modalId, options.errorTitle, options.errorBody);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+      }
+    }
+  }
+
+  function showSuccess(modalId, title, body) {
     const box = document.querySelector(`#${modalId} .modal-box`);
     box.innerHTML = `<div class="success-msg">
       <div class="check">&#x2705;</div>
-      <h3>Submitted Successfully!</h3>
-      <p>Eieum Civil Rights Center will be in touch soon.<br>Thank you!</p>
+      <h3>${title}</h3>
+      <p>${body}</p>
       <button class="modal-submit" style="margin-top:1.5rem;max-width:200px;margin:1.5rem auto 0;display:block;" onclick="closeModal('${modalId}')">Close</button>
     </div>`;
   }
+
+  function showError(modalId, title, body) {
+    const box = document.querySelector(`#${modalId} .modal-box`);
+    box.innerHTML = `<div class="success-msg">
+      <div class="check">&#9888;&#xFE0F;</div>
+      <h3>${title}</h3>
+      <p>${body}</p>
+      <button class="modal-submit" style="margin-top:1.5rem;max-width:220px;margin:1.5rem auto 0;display:block;" onclick="closeModal('${modalId}')">Close</button>
+    </div>`;
+  }
+
+  function submitVolunteerForm(e) {
+    e.preventDefault();
+    deliverForm(e.target, {
+      modalId: 'modal-volunteer',
+      subject: '[Eieum CRC] Volunteer Application',
+      pendingText: 'Sending...',
+      autoresponse: 'Your volunteer application to Eieum Civil Rights Center has been received. Thank you for applying. We will follow up as soon as possible.',
+      successTitle: 'Volunteer application submitted!',
+      successBody: 'Your application was sent to 18project18@gmail.com.<br>Eieum Civil Rights Center will be in touch soon.',
+      errorTitle: 'There was a problem submitting the form.',
+      errorBody: 'Please try again in a moment. If it keeps failing, email 18project18@gmail.com directly.'
+    });
+  }
+
+  function submitNewsletterForm(e) {
+    e.preventDefault();
+    deliverForm(e.target, {
+      modalId: 'modal-newsletter',
+      subject: '[Eieum CRC] Newsletter Signup',
+      pendingText: 'Subscribing...',
+      autoresponse: 'Your newsletter signup for Eieum Civil Rights Center has been received. Thank you. We will send future updates and announcements to this email address.',
+      successTitle: 'Newsletter signup submitted!',
+      successBody: 'Your request was sent to 18project18@gmail.com.<br>We will include you in upcoming updates.',
+      errorTitle: 'There was a problem subscribing.',
+      errorBody: 'Please try again in a moment. If it keeps failing, email 18project18@gmail.com directly.'
+    });
+  }
+
   function selectAmt(btn, val) {
     btn.closest('.donate-amounts').querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
   }
   function sendDonateEmail(e) {
     e.preventDefault();
-    const amt   = document.querySelector('#modal-donate .amt-btn.selected')?.textContent || 'Not selected';
-    const type  = document.getElementById('en-donate-type')?.value || '';
-    const name  = document.getElementById('en-donate-name')?.value || '';
-    const email = document.getElementById('en-donate-email')?.value || '';
-    const subj  = encodeURIComponent(`[Eieum CRC Donation] ${name} - ${amt}`);
-    const body  = encodeURIComponent(
-      `Donation Request\n\nName: ${name}\nContact Email: ${email}\nAmount: ${amt}\nType: ${type}\n\nThank you for supporting Eieum Civil Rights Center.`
-    );
-    window.open(`mailto:18project18@gmail.com?subject=${subj}&body=${body}`);
-    const box = document.querySelector('#modal-donate .modal-box');
-    box.innerHTML = `<div class="success-msg">
-      <div class="check">&#x2705;</div>
-      <h3>Email Ready!</h3>
-      <p>Please send from your email app to <strong>18project18@gmail.com</strong>.<br>Thank you!</p>
-      <button class="modal-submit" style="margin-top:1.5rem;max-width:200px;margin:1.5rem auto 0;display:block;" onclick="closeModal('modal-donate')">Close</button>
-    </div>`;
+    const form = e.target;
+    const amount = form.querySelector('.amt-btn.selected')?.textContent || 'Not selected';
+    const name = document.getElementById('en-donate-name')?.value || '';
+
+    deliverForm(form, {
+      modalId: 'modal-donate',
+      subject: `[Eieum CRC] Donation Request - ${name}`,
+      pendingText: 'Sending...',
+      autoresponse: 'Your donation request to Eieum Civil Rights Center has been received. Thank you for your support. We will follow up with next steps by email.',
+      extraFields: {
+        donation_amount: amount
+      },
+      successTitle: 'Donation request submitted!',
+      successBody: 'Your donation request was sent to 18project18@gmail.com.<br>Eieum Civil Rights Center will follow up with next steps.',
+      errorTitle: 'There was a problem submitting the donation request.',
+      errorBody: 'Please try again in a moment. If it keeps failing, email 18project18@gmail.com directly.'
+    });
   }
 </script>
 </body>
