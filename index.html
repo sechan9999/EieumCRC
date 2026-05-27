@@ -1141,7 +1141,7 @@
   </div>
 </div>
 
-<iframe name="formsubmit-frame" title="Form submission target" style="display:none;"></iframe>
+<iframe id="formsubmit-frame" name="formsubmit-frame" title="Form submission target" style="display:none;"></iframe>
 
 <footer>
   <div class="footer-grid">
@@ -1243,6 +1243,8 @@
     input.value = value;
   }
 
+  let activeFormSubmit = null;
+
   function submitToFormSubmit(form, options) {
     const submitButton = form.querySelector('button[type="submit"]');
     const originalText = submitButton ? submitButton.innerHTML : '';
@@ -1253,7 +1255,7 @@
 
     ensureHiddenField(form, '_subject', options.subject);
     ensureHiddenField(form, '_template', 'table');
-    ensureHiddenField(form, '_captcha', 'true');
+    ensureHiddenField(form, '_captcha', 'false');
     ensureHiddenField(form, '_next', window.location.href);
 
     const emailInput = form.querySelector('input[name="email"]');
@@ -1269,17 +1271,46 @@
       Object.entries(options.extraFields).forEach(([key, value]) => ensureHiddenField(form, key, value));
     }
 
+    activeFormSubmit = {
+      modalId: options.modalId,
+      successTitle: options.successTitle,
+      successBody: options.successBody,
+      errorTitle: options.errorTitle,
+      errorBody: options.errorBody,
+      submitButton,
+      originalText,
+      timeoutId: window.setTimeout(() => {
+        finalizeFormSubmit(false);
+      }, 12000)
+    };
+
     try {
       form.submit();
-      showSuccess(options.modalId, options.successTitle, options.successBody);
     } catch (error) {
-      showError(options.modalId, options.errorTitle, options.errorBody);
+      finalizeFormSubmit(false);
     } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalText;
-      }
+      // iframe load handler finalizes UI after the browser starts the request.
     }
+  }
+
+  function finalizeFormSubmit(success) {
+    if (!activeFormSubmit) return;
+
+    const current = activeFormSubmit;
+    window.clearTimeout(current.timeoutId);
+
+    if (current.submitButton) {
+      current.submitButton.disabled = false;
+      current.submitButton.innerHTML = current.originalText;
+    }
+
+    if (success) {
+      showSuccess(current.modalId, current.successTitle, current.successBody);
+    } else {
+      showError(current.modalId, current.errorTitle, current.errorBody);
+    }
+
+    activeFormSubmit = null;
   }
 
   function showSuccess(modalId, title, body) {
@@ -1363,6 +1394,11 @@
       if (!href || href === '#') return; // bare # — do nothing
       scrollToSection(href.slice(1));
     });
+  });
+
+  document.getElementById('formsubmit-frame').addEventListener('load', () => {
+    if (!activeFormSubmit) return;
+    finalizeFormSubmit(true);
   });
 </script>
 </body>
