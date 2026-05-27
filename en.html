@@ -115,6 +115,7 @@
       position: absolute;
       inset: 0;
       background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
     }
     .hero-tag {
       display: inline-block;
@@ -556,8 +557,8 @@
   <h1>Connected Through <em>Eieum</em>,<br>Building a Just World</h1>
   <p>Eieum Civil Rights Center organizes Korean and Asian American immigrants in metro Atlanta to achieve social, racial, and economic justice — as part of the NAKASEC national network.</p>
   <div class="hero-btns">
-    <a href="#projects" class="btn btn-gold">Explore Our Work</a>
-    <a href="#involve" class="btn btn-outline">Take Action</a>
+    <button type="button" class="btn btn-gold" onclick="scrollToSection('projects')">Explore Our Work</button>
+    <button type="button" class="btn btn-outline" onclick="scrollToSection('involve')">Take Action</button>
   </div>
 </header>
 
@@ -910,7 +911,7 @@
     <button class="modal-close" onclick="closeModal('modal-volunteer')">&#x2715;</button>
     <h2>&#x1F64B; Volunteer Application</h2>
     <p class="modal-sub">Choose the area where you'd like to contribute your time and skills.</p>
-    <form class="modal-form" onsubmit="submitVolunteerForm(event)">
+    <form class="modal-form" action="https://formsubmit.co/18project18@gmail.com" method="POST" target="formsubmit-frame" onsubmit="submitVolunteerForm(event)">
       <label>Full Name *</label>
       <input type="text" name="name" placeholder="Jane Doe" required>
       <label>Email *</label>
@@ -970,7 +971,7 @@
     <button class="modal-close" onclick="closeModal('modal-newsletter')">&#x2715;</button>
     <h2>&#x1F4E7; Newsletter Signup</h2>
     <p class="modal-sub">Get our latest updates, rights information, and event announcements. Sent 1&ndash;2 times per month.</p>
-    <form class="modal-form" onsubmit="submitNewsletterForm(event)">
+    <form class="modal-form" action="https://formsubmit.co/18project18@gmail.com" method="POST" target="formsubmit-frame" onsubmit="submitNewsletterForm(event)">
       <label>Full Name *</label>
       <input type="text" name="name" placeholder="Jane Doe" required>
       <label>Email *</label>
@@ -994,7 +995,7 @@
     <button class="modal-close" onclick="closeModal('modal-donate')">&#x2715;</button>
     <h2>&#x2764;&#xFE0F; Donate</h2>
     <p class="modal-sub">Your donation protects the rights of immigrant communities.</p>
-    <form class="modal-form" onsubmit="sendDonateEmail(event)">
+    <form class="modal-form" action="https://formsubmit.co/18project18@gmail.com" method="POST" target="formsubmit-frame" onsubmit="sendDonateEmail(event)">
       <label>Select Amount</label>
       <div class="donate-amounts">
         <button type="button" class="amt-btn" onclick="selectAmt(this,'$10')">$10</button>
@@ -1019,6 +1020,8 @@
     </form>
   </div>
 </div>
+
+<iframe name="formsubmit-frame" title="Form submission target" style="display:none;"></iframe>
 
 <footer>
   <div class="footer-grid">
@@ -1113,9 +1116,25 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
   });
-  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/18project18@gmail.com';
+  function scrollToSection(sectionId) {
+    const target = document.getElementById(sectionId);
+    if (target) {
+      window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+    }
+  }
 
-  async function deliverForm(form, options) {
+  function ensureHiddenField(form, name, value) {
+    let input = form.querySelector(`input[name="${name}"]`);
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = value;
+  }
+
+  function submitToFormSubmit(form, options) {
     const submitButton = form.querySelector('button[type="submit"]');
     const originalText = submitButton ? submitButton.innerHTML : '';
     if (submitButton) {
@@ -1123,30 +1142,26 @@
       submitButton.textContent = options.pendingText || 'Sending...';
     }
 
-    const data = new FormData(form);
-    data.append('_subject', options.subject);
-    data.append('_template', 'table');
-    data.append('_captcha', 'false');
-    data.append('_replyto', data.get('email') || '18project18@gmail.com');
+    ensureHiddenField(form, '_subject', options.subject);
+    ensureHiddenField(form, '_template', 'table');
+    ensureHiddenField(form, '_captcha', 'true');
+    ensureHiddenField(form, '_next', window.location.href);
+
+    const emailInput = form.querySelector('input[name="email"]');
+    if (emailInput && emailInput.value) {
+      ensureHiddenField(form, '_replyto', emailInput.value);
+    }
+
     if (options.autoresponse) {
-      data.append('_autoresponse', options.autoresponse);
+      ensureHiddenField(form, '_autoresponse', options.autoresponse);
     }
 
     if (options.extraFields) {
-      Object.entries(options.extraFields).forEach(([key, value]) => data.append(key, value));
+      Object.entries(options.extraFields).forEach(([key, value]) => ensureHiddenField(form, key, value));
     }
 
     try {
-      const response = await fetch(FORMSUBMIT_ENDPOINT, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: data
-      });
-
-      if (!response.ok) {
-        throw new Error('Form submission failed');
-      }
-
+      form.submit();
       showSuccess(options.modalId, options.successTitle, options.successBody);
     } catch (error) {
       showError(options.modalId, options.errorTitle, options.errorBody);
@@ -1180,7 +1195,7 @@
 
   function submitVolunteerForm(e) {
     e.preventDefault();
-    deliverForm(e.target, {
+    submitToFormSubmit(e.target, {
       modalId: 'modal-volunteer',
       subject: '[Eieum CRC] Volunteer Application',
       pendingText: 'Sending...',
@@ -1194,7 +1209,7 @@
 
   function submitNewsletterForm(e) {
     e.preventDefault();
-    deliverForm(e.target, {
+    submitToFormSubmit(e.target, {
       modalId: 'modal-newsletter',
       subject: '[Eieum CRC] Newsletter Signup',
       pendingText: 'Subscribing...',
@@ -1216,7 +1231,7 @@
     const amount = form.querySelector('.amt-btn.selected')?.textContent || 'Not selected';
     const name = document.getElementById('en-donate-name')?.value || '';
 
-    deliverForm(form, {
+    submitToFormSubmit(form, {
       modalId: 'modal-donate',
       subject: `[Eieum CRC] Donation Request - ${name}`,
       pendingText: 'Sending...',
@@ -1230,6 +1245,15 @@
       errorBody: 'Please try again in a moment. If it keeps failing, email 18project18@gmail.com directly.'
     });
   }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      scrollToSection(href.slice(1));
+    });
+  });
 </script>
 </body>
 </html>

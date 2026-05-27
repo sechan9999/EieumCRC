@@ -115,6 +115,7 @@
       position: absolute;
       inset: 0;
       background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
     }
     .hero-tag {
       display: inline-block;
@@ -556,8 +557,8 @@
   <h1>함께 <em>이음</em>으로<br>더 정의로운 세상을</h1>
   <p>이음 민권센터는 조지아 애틀랜타의 한인 및 아시아계 이민자 공동체가 사회적·인종적·경제적 정의를 실현할 수 있도록 조직하고 연결합니다.</p>
   <div class="hero-btns">
-    <a href="#projects" class="btn btn-gold">핵심 프로젝트 보기</a>
-    <a href="#involve" class="btn btn-outline">함께 참여하기</a>
+    <button type="button" class="btn btn-gold" onclick="scrollToSection('projects')">핵심 프로젝트 보기</button>
+    <button type="button" class="btn btn-outline" onclick="scrollToSection('involve')">함께 참여하기</button>
   </div>
 </header>
 
@@ -1030,7 +1031,7 @@
     <button class="modal-close" onclick="closeModal('modal-volunteer')">✕</button>
     <h2>🙋 자원봉사 신청</h2>
     <p class="modal-sub">법률 클리닉, 실태조사, 행사 운영 등 원하시는 분야를 선택해 주세요.</p>
-    <form class="modal-form" onsubmit="submitVolunteerForm(event)">
+    <form class="modal-form" action="https://formsubmit.co/18project18@gmail.com" method="POST" target="formsubmit-frame" onsubmit="submitVolunteerForm(event)">
       <label>이름 *</label>
       <input type="text" name="name" placeholder="홍길동" required>
       <label>이메일 *</label>
@@ -1090,7 +1091,7 @@
     <button class="modal-close" onclick="closeModal('modal-newsletter')">✕</button>
     <h2>📧 뉴스레터 구독</h2>
     <p class="modal-sub">이음 민권센터의 최신 소식, 권리 정보, 행사 안내를 이메일로 받아보세요. 월 1–2회 발송됩니다.</p>
-    <form class="modal-form" onsubmit="submitNewsletterForm(event)">
+    <form class="modal-form" action="https://formsubmit.co/18project18@gmail.com" method="POST" target="formsubmit-frame" onsubmit="submitNewsletterForm(event)">
       <label>이름 *</label>
       <input type="text" name="name" placeholder="홍길동" required>
       <label>이메일 *</label>
@@ -1114,7 +1115,7 @@
     <button class="modal-close" onclick="closeModal('modal-donate')">✕</button>
     <h2>❤️ 후원하기</h2>
     <p class="modal-sub">여러분의 후원이 이민자 공동체의 권리를 지키는 힘이 됩니다.</p>
-    <form class="modal-form" onsubmit="sendDonateEmail(event)">
+    <form class="modal-form" action="https://formsubmit.co/18project18@gmail.com" method="POST" target="formsubmit-frame" onsubmit="sendDonateEmail(event)">
       <label>후원 금액 선택</label>
       <div class="donate-amounts">
         <button type="button" class="amt-btn" onclick="selectAmt(this,'$10')">$10</button>
@@ -1139,6 +1140,8 @@
     </form>
   </div>
 </div>
+
+<iframe name="formsubmit-frame" title="Form submission target" style="display:none;"></iframe>
 
 <footer>
   <div class="footer-grid">
@@ -1222,9 +1225,25 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => closeModal(m.id));
   });
-  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/18project18@gmail.com';
+  function scrollToSection(sectionId) {
+    const target = document.getElementById(sectionId);
+    if (target) {
+      window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+    }
+  }
 
-  async function deliverForm(form, options) {
+  function ensureHiddenField(form, name, value) {
+    let input = form.querySelector(`input[name="${name}"]`);
+    if (!input) {
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      form.appendChild(input);
+    }
+    input.value = value;
+  }
+
+  function submitToFormSubmit(form, options) {
     const submitButton = form.querySelector('button[type="submit"]');
     const originalText = submitButton ? submitButton.innerHTML : '';
     if (submitButton) {
@@ -1232,30 +1251,26 @@
       submitButton.textContent = options.pendingText || '전송 중...';
     }
 
-    const data = new FormData(form);
-    data.append('_subject', options.subject);
-    data.append('_template', 'table');
-    data.append('_captcha', 'false');
-    data.append('_replyto', data.get('email') || '18project18@gmail.com');
+    ensureHiddenField(form, '_subject', options.subject);
+    ensureHiddenField(form, '_template', 'table');
+    ensureHiddenField(form, '_captcha', 'true');
+    ensureHiddenField(form, '_next', window.location.href);
+
+    const emailInput = form.querySelector('input[name="email"]');
+    if (emailInput && emailInput.value) {
+      ensureHiddenField(form, '_replyto', emailInput.value);
+    }
+
     if (options.autoresponse) {
-      data.append('_autoresponse', options.autoresponse);
+      ensureHiddenField(form, '_autoresponse', options.autoresponse);
     }
 
     if (options.extraFields) {
-      Object.entries(options.extraFields).forEach(([key, value]) => data.append(key, value));
+      Object.entries(options.extraFields).forEach(([key, value]) => ensureHiddenField(form, key, value));
     }
 
     try {
-      const response = await fetch(FORMSUBMIT_ENDPOINT, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: data
-      });
-
-      if (!response.ok) {
-        throw new Error('Form submission failed');
-      }
-
+      form.submit();
       showSuccess(options.modalId, options.successTitle, options.successBody);
     } catch (error) {
       showError(options.modalId, options.errorTitle, options.errorBody);
@@ -1289,7 +1304,7 @@
 
   function submitVolunteerForm(e) {
     e.preventDefault();
-    deliverForm(e.target, {
+    submitToFormSubmit(e.target, {
       modalId: 'modal-volunteer',
       subject: '[이음 민권센터] 자원봉사 신청',
       pendingText: '접수 중...',
@@ -1303,7 +1318,7 @@
 
   function submitNewsletterForm(e) {
     e.preventDefault();
-    deliverForm(e.target, {
+    submitToFormSubmit(e.target, {
       modalId: 'modal-newsletter',
       subject: '[이음 민권센터] 뉴스레터 구독 신청',
       pendingText: '구독 처리 중...',
@@ -1325,7 +1340,7 @@
     const amount = form.querySelector('.amt-btn.selected')?.textContent || '미선택';
     const name = document.getElementById('donate-name')?.value || '';
 
-    deliverForm(form, {
+    submitToFormSubmit(form, {
       modalId: 'modal-donate',
       subject: `[이음 민권센터] 후원 신청 - ${name}`,
       pendingText: '접수 중...',
@@ -1346,10 +1361,7 @@
       e.preventDefault();
       const href = a.getAttribute('href');
       if (!href || href === '#') return; // bare # — do nothing
-      const target = document.querySelector(href);
-      if (target) {
-        window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
-      }
+      scrollToSection(href.slice(1));
     });
   });
 </script>
